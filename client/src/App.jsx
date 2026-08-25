@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react";
-import api from "./api/axios";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
-  const [status, setStatus] = useState("checking...");
-
-  useEffect(() => {
-    api.get("/health")
-      .then((res) => setStatus(res.data.message))
-      .catch(() => setStatus("Backend not reachable"));
-  }, []);
-
-  return <h1 className="text-2xl font-bold p-8">{status}</h1>;
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </>
+  );
 }
 
 export default App;
