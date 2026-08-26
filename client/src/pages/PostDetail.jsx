@@ -1,0 +1,59 @@
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { MapPin, Calendar, User } from "lucide-react";
+import api from "../api/axios";
+
+export default function PostDetail() {
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    api
+      .get(`/posts/${id}`)
+      .then((res) => setPost(res.data))
+      .catch(() => setError("Post not found"))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) return <p className="max-w-3xl mx-auto px-8 py-12 text-gray-400">Loading...</p>;
+  if (error) return <p className="max-w-3xl mx-auto px-8 py-12 text-red-600">{error}</p>;
+
+  return (
+    <div className="max-w-3xl mx-auto px-8 py-12">
+      <div className="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center mb-6">
+        {post.image ? (
+          <img src={post.image} alt={post.title} className="w-full h-full object-cover rounded-2xl" />
+        ) : (
+          <span className="text-gray-400 text-sm">No image</span>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-3xl font-extrabold">{post.title}</h1>
+        <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-50 text-blue-800 capitalize">
+          {post.status}
+        </span>
+      </div>
+
+      <p className="text-gray-600 mb-6">{post.description}</p>
+
+      <div className="flex flex-wrap gap-6 text-sm text-gray-500 mb-8">
+        <span className="flex items-center gap-1.5">
+          <MapPin size={14} /> {post.location}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <Calendar size={14} /> {new Date(post.date).toLocaleDateString()}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <User size={14} /> Posted by {post.postedBy?.name || "Unknown"}
+        </span>
+      </div>
+
+      <button className="bg-blue-800 text-white font-semibold rounded-lg px-5 py-3 hover:bg-blue-900 transition-colors">
+        Contact {post.postedBy?.name || "poster"}
+      </button>
+    </div>
+  );
+}

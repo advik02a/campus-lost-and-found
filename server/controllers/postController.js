@@ -1,0 +1,78 @@
+import Post from "../models/Post.js";
+
+// POST /api/posts (protected)
+export const createPost = async (req, res) => {
+  try {
+    const { title, description, type, category, location, date } = req.body;
+
+    if (!title || !description || !type || !category || !location || !date) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const post = await Post.create({
+      title,
+      description,
+      type,
+      category,
+      location,
+      date,
+      postedBy: req.user.id,
+    });
+
+    res.status(201).json(post);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// GET /api/posts (public) - supports search, category, type, location, page, limit
+export const getPosts = async (req, res) => {
+  try {
+    const { search, category, type, location, page = 1, limit = 12 } = req.query;
+
+    const filter = {};
+    if (category) filter.category = category;
+    if (type) filter.type = type;
+    if (location) filter.location = location;
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const posts = await Post.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit))
+      .populate("postedBy", "name email");
+
+    const total = await Post.countDocuments(filter);
+
+    res.status(200).json({
+      posts,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// GET /api/posts/:id (public)
+export const getPostById = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).populate("postedBy", "name email");
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
