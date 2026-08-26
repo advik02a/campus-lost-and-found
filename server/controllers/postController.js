@@ -25,6 +25,9 @@ export const createPost = async (req, res) => {
   }
 };
 
+
+
+
 // GET /api/posts (public) - supports search, category, type, location, page, limit
 export const getPosts = async (req, res) => {
   try {
@@ -34,17 +37,22 @@ export const getPosts = async (req, res) => {
     if (category) filter.category = category;
     if (type) filter.type = type;
     if (location) filter.location = location;
-    if (search) {
-      filter.$or = [
-        { title: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-      ];
-    }
+    if (search) filter.$text = { $search: search };
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    const posts = await Post.find(filter)
-      .sort({ createdAt: -1 })
+    let query = Post.find(filter);
+
+    // When searching, sort by text relevance score; otherwise by newest first
+    if (search) {
+      query = query
+        .select({ score: { $meta: "textScore" } })
+        .sort({ score: { $meta: "textScore" } });
+    } else {
+      query = query.sort({ createdAt: -1 });
+    }
+
+    const posts = await query
       .skip(skip)
       .limit(Number(limit))
       .populate("postedBy", "name email");
@@ -61,6 +69,10 @@ export const getPosts = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+
+
+
 
 // GET /api/posts/:id (public)
 export const getPostById = async (req, res) => {

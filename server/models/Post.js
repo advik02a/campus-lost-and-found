@@ -46,7 +46,12 @@ const postSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
+
 );
+
+postSchema.index({ title: "text", description: "text" });
+
+postSchema.index({ type: 1, category: 1, location: 1, createdAt: -1 });
 
 const Post = mongoose.model("Post", postSchema);
 
