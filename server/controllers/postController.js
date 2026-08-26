@@ -76,3 +76,63 @@ export const getPostById = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+// PUT /api/posts/:id (protected, owner only)
+export const updatePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.postedBy.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to edit this post" });
+    }
+
+    const { title, description, type, category, location, date } = req.body;
+
+    if (title) post.title = title;
+    if (description) post.description = description;
+    if (type) post.type = type;
+    if (category) post.category = category;
+    if (location) post.location = location;
+    if (date) post.date = date;
+
+    const updatedPost = await post.save();
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// DELETE /api/posts/:id (protected, owner only)
+export const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.postedBy.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to delete this post" });
+    }
+
+    await post.deleteOne();
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
+// GET /api/posts/mine (protected)
+export const getMyPosts = async (req, res) => {
+  try {
+    const posts = await Post.find({ postedBy: req.user.id }).sort({ createdAt: -1 });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};

@@ -29,15 +29,19 @@ export default function Navbar() {
           </Link>
 
           {user ? (
-            <>
-              <span className="text-sm text-gray-600">Hi, {user.name}</span>
-              <button
-                onClick={handleLogout}
+                    <>
+                  <Link to="/my-posts"
+                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                   >
+                  My Posts
+              </Link>
+                <span className="text-sm text-gray-600">Hi, {user.name}</span>
+               <button onClick={handleLogout}
                 className="text-sm font-medium border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 transition-colors"
-              >
+                   >
                 Logout
-              </button>
-            </>
+            </button>
+           </>
           ) : (
             <>
               <Link
