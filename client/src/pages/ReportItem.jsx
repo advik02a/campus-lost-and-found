@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ImagePlus, X } from "lucide-react";
 import api from "../api/axios";
 
 const categories = ["Electronics", "Wallet", "Documents", "Clothing", "ID Card", "Other"];
@@ -14,6 +15,8 @@ export default function ReportItem() {
     location: locations[0],
     date: "",
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -21,11 +24,42 @@ export default function ReportItem() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Basic client-side validation
+    if (!file.type.startsWith("image/")) {
+      setError("Please select an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be smaller than 5MB");
+      return;
+    }
+
+    setError("");
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      const res = await api.post("/posts", form);
+      // Build FormData so we can send the file alongside text fields
+      const formData = new FormData();
+      Object.entries(form).forEach(([key, value]) => formData.append(key, value));
+      if (imageFile) formData.append("image", imageFile);
+
+      const res = await api.post("/posts", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       navigate(`/posts/${res.data._id}`);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit report");
@@ -65,6 +99,37 @@ export default function ReportItem() {
           >
             I found something
           </button>
+        </div>
+
+        {/* Image upload */}
+        <div>
+          <label className="text-xs font-semibold text-gray-500 mb-2 block">
+            Photo (optional)
+          </label>
+
+          {imagePreview ? (
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-gray-200">
+              <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+              <button
+                type="button"
+                onClick={removeImage}
+                className="absolute top-2 right-2 bg-white/90 rounded-full p-1.5 hover:bg-white"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          ) : (
+            <label className="flex flex-col items-center justify-center gap-2 w-full aspect-video rounded-xl border-2 border-dashed border-gray-300 text-gray-400 cursor-pointer hover:border-gray-400 hover:text-gray-500 transition-colors">
+              <ImagePlus size={28} />
+              <span className="text-sm">Click to upload a photo</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
+          )}
         </div>
 
         <input

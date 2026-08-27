@@ -1,6 +1,7 @@
 import Post from "../models/Post.js";
 
 // POST /api/posts (protected)
+
 export const createPost = async (req, res) => {
   try {
     const { title, description, type, category, location, date } = req.body;
@@ -16,6 +17,7 @@ export const createPost = async (req, res) => {
       category,
       location,
       date,
+      image: req.file ? req.file.path : "",
       postedBy: req.user.id,
     });
 
@@ -110,6 +112,7 @@ export const updatePost = async (req, res) => {
     if (category) post.category = category;
     if (location) post.location = location;
     if (date) post.date = date;
+    if (req.file) post.image = req.file.path; // only update image if a new one was uploaded
 
     const updatedPost = await post.save();
     res.status(200).json(updatedPost);
