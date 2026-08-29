@@ -151,3 +151,35 @@ export const getMyPosts = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+
+// PATCH /api/posts/:id/status (protected, owner only)
+export const updateStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const validStatuses = ["lost", "found", "claimed", "recovered"];
+
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.postedBy.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to update this post's status" });
+    }
+
+    post.status = status;
+    await post.save();
+
+    const updatedPost = await Post.findById(post._id).populate("postedBy", "name email");
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};

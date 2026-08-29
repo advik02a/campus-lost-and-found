@@ -6,6 +6,7 @@ import {
   updatePost,
   deletePost,
   getMyPosts,
+  updateStatus,
 } from "../controllers/postController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import upload from "../config/cloudinary.js";
@@ -17,6 +18,7 @@ router.get("/", getPosts);
 router.get("/mine", protect, getMyPosts);
 router.get("/:id", getPostById);
 router.put("/:id", protect, upload.single("image"), updatePost);
+router.patch("/:id/status", protect, updateStatus);
 router.delete("/:id", protect, deletePost);
 
 export default router;
