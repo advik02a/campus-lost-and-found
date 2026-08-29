@@ -183,3 +183,31 @@ export const updateStatus = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+// GET /api/admin/posts (admin only)
+export const getAllPostsAdmin = async (req, res) => {
+  try {
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .populate("postedBy", "name email");
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// DELETE /api/admin/posts/:id (admin only, can delete ANY post)
+export const deletePostAdmin = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    await post.deleteOne();
+    res.status(200).json({ message: "Post removed by admin" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};

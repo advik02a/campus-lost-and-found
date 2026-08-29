@@ -8,6 +8,8 @@ import ReportItem from "./pages/ReportItem";
 import PostDetail from "./pages/PostDetail";
 import MyPosts from "./pages/MyPosts";
 import EditPost from "./pages/EditPost";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminRoute from "./components/AdminRoute";
 
 
 function App() {
@@ -23,6 +25,10 @@ function App() {
         <Route path="/posts/:id" element={<PostDetail />} />
         <Route path="/my-posts" element={<MyPosts />} />
         <Route path="/posts/:id/edit" element={<EditPost />} />
+        <Route path="/admin" element={
+    <AdminRoute>
+    <AdminDashboard />
+    </AdminRoute>}/>
       </Routes>
     </>
   );

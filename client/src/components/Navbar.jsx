@@ -41,6 +41,14 @@ export default function Navbar() {
                    >
                 Logout
             </button>
+            {user.role === "admin" && (
+  <Link
+    to="/admin"
+    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+  >
+    Admin
+  </Link>
+)}
            </>
           ) : (
             <>
