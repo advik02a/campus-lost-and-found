@@ -36,6 +36,7 @@ const handleStatusChange = async (newStatus) => {
   try {
     const res = await api.patch(`/posts/${id}/status`, { status: newStatus });
     setPost(res.data);
+    toast.success(`Status updated to ${newStatus}`);
   } catch (err) {
     alert(err.response?.data?.message || "Failed to update status");
   } finally {

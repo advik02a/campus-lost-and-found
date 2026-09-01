@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Calendar, Pencil, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
 import api from "../api/axios";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 export default function MyPosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [confirmId, setConfirmId] = useState(null);
 
   const statusColors = {
     lost: "bg-red-50 text-red-700",
@@ -20,7 +23,7 @@ export default function MyPosts() {
       const res = await api.get("/posts/mine");
       setPosts(res.data);
     } catch (err) {
-      console.error("Failed to fetch your posts:", err);
+      toast.error("Failed to load your posts");
     } finally {
       setLoading(false);
     }
@@ -30,14 +33,15 @@ export default function MyPosts() {
     fetchMyPosts();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this post?")) return;
-
+  const handleDelete = async () => {
+    const id = confirmId;
+    setConfirmId(null);
     try {
       await api.delete(`/posts/${id}`);
       setPosts(posts.filter((p) => p._id !== id));
+      toast.success("Post deleted");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete post");
+      toast.error(err.response?.data?.message || "Failed to delete post");
     }
   };
 
@@ -93,7 +97,7 @@ export default function MyPosts() {
                   Edit
                 </Link>
                 <button
-                  onClick={() => handleDelete(post._id)}
+                  onClick={() => setConfirmId(post._id)}
                   className="flex items-center gap-1.5 text-sm font-medium border border-red-200 text-red-600 rounded-lg px-3 py-2 hover:bg-red-50 transition-colors"
                 >
                   <Trash2 size={14} />
@@ -104,6 +108,14 @@ export default function MyPosts() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmId !== null}
+        title="Delete this post?"
+        message="This action cannot be undone."
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmId(null)}
+      />
     </div>
   );
 }

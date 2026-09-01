@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImagePlus, X } from "lucide-react";
+import toast from "react-hot-toast";
 import api from "../api/axios";
 
 const categories = ["Electronics", "Wallet", "Documents", "Clothing", "ID Card", "Other"];
@@ -60,6 +61,7 @@ export default function ReportItem() {
       const res = await api.post("/posts", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      toast.success("Item reported successfully");
       navigate(`/posts/${res.data._id}`);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit report");

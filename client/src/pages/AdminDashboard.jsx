@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { Trash2, Users, PackageSearch } from "lucide-react";
+import toast from "react-hot-toast";
 import api from "../api/axios";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState("posts");
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [confirmId, setConfirmId] = useState(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -18,7 +21,7 @@ export default function AdminDashboard() {
       setPosts(postsRes.data);
       setUsers(usersRes.data);
     } catch (err) {
-      console.error("Failed to load admin data:", err);
+      toast.error("Failed to load admin data");
     } finally {
       setLoading(false);
     }
@@ -28,13 +31,15 @@ export default function AdminDashboard() {
     fetchData();
   }, []);
 
-  const handleDeletePost = async (id) => {
-    if (!window.confirm("Remove this post permanently?")) return;
+  const handleDeletePost = async () => {
+    const id = confirmId;
+    setConfirmId(null);
     try {
       await api.delete(`/admin/posts/${id}`);
       setPosts(posts.filter((p) => p._id !== id));
+      toast.success("Post removed");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete post");
+      toast.error(err.response?.data?.message || "Failed to delete post");
     }
   };
 
@@ -89,7 +94,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
                 <button
-                  onClick={() => handleDeletePost(post._id)}
+                  onClick={() => setConfirmId(post._id)}
                   className="flex items-center gap-1.5 text-sm font-medium border border-red-200 text-red-600 rounded-lg px-3 py-2 hover:bg-red-50 transition-colors"
                 >
                   <Trash2 size={14} />
@@ -123,6 +128,14 @@ export default function AdminDashboard() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmId !== null}
+        title="Remove this post?"
+        message="This will permanently delete the post."
+        onConfirm={handleDeletePost}
+        onCancel={() => setConfirmId(null)}
+      />
     </div>
   );
 }

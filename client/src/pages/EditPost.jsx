@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import toast from "react-hot-toast";
 
 const categories = ["Electronics", "Wallet", "Documents", "Clothing", "ID Card", "Other"];
 const locations = ["Library", "Hostel Block A", "Academic Block", "Sports Complex", "Cafeteria"];
@@ -39,6 +40,7 @@ export default function EditPost() {
     setError("");
     try {
       await api.put(`/posts/${id}`, form);
+      toast.success("Post updated");
       navigate(`/posts/${id}`);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update post");
