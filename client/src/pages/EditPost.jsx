@@ -51,7 +51,7 @@ export default function EditPost() {
   if (!form) return <p className="max-w-2xl mx-auto px-8 py-12 text-red-600">{error}</p>;
 
   return (
-    <div className="max-w-2xl mx-auto px-8 py-12">
+    <div className="max-w-2xl mx-auto px-4 sm:px-8 py-12">
       <h1 className="text-3xl font-extrabold mb-2">Edit Post</h1>
       <p className="text-gray-500 mb-8">Update the details of your report.</p>
 

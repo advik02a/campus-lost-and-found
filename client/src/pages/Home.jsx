@@ -4,32 +4,32 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#fafafa] text-[#0a0a0a]">
       {/* Hero */}
-      <section className="max-w-7xl mx-auto px-8 pt-20 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-16 items-start">
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 pt-12 sm:pt-20 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-10 lg:gap-16 items-start">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider text-gray-500 border border-gray-200 rounded-full px-3 py-1.5 mb-6">
               <MapPin size={12} />
               CAMPUS RECOVERY NETWORK
             </div>
 
-            <h1 className="text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05] mb-6">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6">
               Lost something on campus?
               <br />
               <span className="text-blue-800">Let's get it back.</span>
             </h1>
 
-            <p className="text-lg text-gray-500 max-w-xl mb-8 leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-500 max-w-xl mb-8 leading-relaxed">
               A single, trusted place for students to report lost items, post
               what they've found, and reconnect belongings with their owners
               — fast.
             </p>
 
-            <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 bg-blue-800 text-white font-semibold rounded-lg px-5 py-3 hover:bg-blue-900 transition-colors">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <button className="flex items-center justify-center gap-2 bg-blue-800 text-white font-semibold rounded-lg px-5 py-3 hover:bg-blue-900 transition-colors">
                 <Search size={16} />
                 Browse Listings
               </button>
-              <button className="flex items-center gap-2 border border-gray-300 font-semibold rounded-lg px-5 py-3 hover:bg-gray-50 transition-colors">
+              <button className="flex items-center justify-center gap-2 border border-gray-300 font-semibold rounded-lg px-5 py-3 hover:bg-gray-50 transition-colors">
                 <Plus size={16} />
                 Report an Item
               </button>
@@ -83,7 +83,9 @@ export default function Home() {
           ].map((f, i) => (
             <div
               key={f.title}
-              className={`px-8 py-12 ${i > 0 ? "md:border-l border-gray-200" : ""}`}
+              className={`px-4 sm:px-8 py-10 sm:py-12 ${
+                i > 0 ? "md:border-l border-gray-200" : ""
+              }`}
             >
               <div className="w-9 h-9 rounded-full border border-blue-800 text-blue-800 flex items-center justify-center mb-5">
                 {f.icon}
@@ -96,8 +98,10 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="max-w-7xl mx-auto px-8 py-16 border-t border-gray-200">
-        <h2 className="text-3xl font-extrabold tracking-tight mb-10">How it works</h2>
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 py-16 border-t border-gray-200">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-10">
+          How it works
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[

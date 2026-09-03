@@ -44,7 +44,7 @@ export default function AdminDashboard() {
   };
 
   if (loading) {
-    return <p className="max-w-6xl mx-auto px-8 py-12 text-gray-400">Loading...</p>;
+    return <p className="max-w-6xl mx-auto px-4 sm:px-8 py-12 text-gray-400">Loading...</p>;
   }
 
   return (
@@ -85,7 +85,7 @@ export default function AdminDashboard() {
             posts.map((post) => (
               <div
                 key={post._id}
-                className="flex items-center justify-between border border-gray-200 rounded-xl p-4"
+               className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-gray-200 rounded-2xl p-5"
               >
                 <div>
                   <div className="font-semibold">{post.title}</div>
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
           {users.map((u) => (
             <div
               key={u._id}
-              className="flex items-center justify-between border border-gray-200 rounded-xl p-4"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-gray-200 rounded-2xl p-5"
             >
               <div>
                 <div className="font-semibold">{u.name}</div>

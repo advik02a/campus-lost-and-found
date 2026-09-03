@@ -23,7 +23,7 @@ export default function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 px-8">
+    <div className="max-w-md mx-auto mt-20 px-4 sm:px-8">
       <h1 className="text-3xl font-extrabold mb-6">Log in</h1>
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">

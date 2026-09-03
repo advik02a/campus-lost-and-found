@@ -46,11 +46,11 @@ export default function MyPosts() {
   };
 
   if (loading) {
-    return <p className="max-w-5xl mx-auto px-8 py-12 text-gray-400">Loading...</p>;
+    return <p className="max-w-5xl mx-auto px-4 sm:px-8 py-12 text-gray-400">Loading...</p>;
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-8 py-12">
+    <div className="max-w-5xl mx-auto px-4 sm:px-8 py-12">
       <h1 className="text-3xl font-extrabold mb-2">My Posts</h1>
       <p className="text-gray-500 mb-8">
         Manage the items you've reported as lost or found.
@@ -63,7 +63,7 @@ export default function MyPosts() {
           {posts.map((post) => (
             <div
               key={post._id}
-              className="flex items-center justify-between border border-gray-200 rounded-2xl p-5"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-gray-200 rounded-2xl p-5"
             >
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">

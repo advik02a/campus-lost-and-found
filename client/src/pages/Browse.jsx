@@ -48,7 +48,7 @@ export default function Browse() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-8 py-12">
+   <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12">
       <h1 className="text-3xl font-extrabold mb-2">Browse Listings</h1>
       <p className="text-gray-500 mb-8">
         Search reported lost and found items across campus.
@@ -56,7 +56,7 @@ export default function Browse() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8">
         {/* Filter sidebar */}
-        <aside className="flex flex-col gap-5">
+        <aside className="flex flex-col gap-4 lg:gap-5 mb-2 lg:mb-0">
           <input
             type="text"
             placeholder="Search..."

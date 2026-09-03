@@ -1,7 +1,6 @@
 import Post from "../models/Post.js";
 
 // POST /api/posts (protected)
-
 export const createPost = async (req, res) => {
   try {
     const { title, description, type, category, location, date } = req.body;
@@ -10,13 +9,32 @@ export const createPost = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    if (title.trim().length < 3 || title.trim().length > 100) {
+      return res.status(400).json({ message: "Title must be between 3 and 100 characters" });
+    }
+
+    if (description.trim().length < 10 || description.trim().length > 1000) {
+      return res.status(400).json({ message: "Description must be between 10 and 1000 characters" });
+    }
+
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ message: "Please provide a valid date" });
+    }
+
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    if (parsedDate > today) {
+      return res.status(400).json({ message: "Date cannot be in the future" });
+    }
+
     const post = await Post.create({
-      title,
-      description,
+      title: title.trim(),
+      description: description.trim(),
       type,
       category,
       location,
-      date,
+      date: parsedDate,
       image: req.file ? req.file.path : "",
       postedBy: req.user.id,
     });
@@ -26,9 +44,6 @@ export const createPost = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
-
-
 
 // GET /api/posts (public) - supports search, category, type, location, page, limit
 export const getPosts = async (req, res) => {
@@ -45,7 +60,6 @@ export const getPosts = async (req, res) => {
 
     let query = Post.find(filter);
 
-    // When searching, sort by text relevance score; otherwise by newest first
     if (search) {
       query = query
         .select({ score: { $meta: "textScore" } })
@@ -71,10 +85,6 @@ export const getPosts = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
-
-
-
 
 // GET /api/posts/:id (public)
 export const getPostById = async (req, res) => {
@@ -106,13 +116,33 @@ export const updatePost = async (req, res) => {
 
     const { title, description, type, category, location, date } = req.body;
 
-    if (title) post.title = title;
-    if (description) post.description = description;
+    if (title && (title.trim().length < 3 || title.trim().length > 100)) {
+      return res.status(400).json({ message: "Title must be between 3 and 100 characters" });
+    }
+
+    if (description && (description.trim().length < 10 || description.trim().length > 1000)) {
+      return res.status(400).json({ message: "Description must be between 10 and 1000 characters" });
+    }
+
+    if (date) {
+      const parsedDate = new Date(date);
+      if (isNaN(parsedDate.getTime())) {
+        return res.status(400).json({ message: "Please provide a valid date" });
+      }
+      const today = new Date();
+      today.setHours(23, 59, 59, 999);
+      if (parsedDate > today) {
+        return res.status(400).json({ message: "Date cannot be in the future" });
+      }
+    }
+
+    if (title) post.title = title.trim();
+    if (description) post.description = description.trim();
     if (type) post.type = type;
     if (category) post.category = category;
     if (location) post.location = location;
     if (date) post.date = date;
-    if (req.file) post.image = req.file.path; // only update image if a new one was uploaded
+    if (req.file) post.image = req.file.path;
 
     const updatedPost = await post.save();
     res.status(200).json(updatedPost);
@@ -141,7 +171,6 @@ export const deletePost = async (req, res) => {
   }
 };
 
-
 // GET /api/posts/mine (protected)
 export const getMyPosts = async (req, res) => {
   try {
@@ -151,7 +180,6 @@ export const getMyPosts = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
 
 // PATCH /api/posts/:id/status (protected, owner only)
 export const updateStatus = async (req, res) => {

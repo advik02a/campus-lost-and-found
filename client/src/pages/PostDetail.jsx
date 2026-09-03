@@ -13,6 +13,7 @@ const statusColors = {
   recovered: "bg-gray-100 text-gray-600",
 };
 
+
 export default function PostDetail() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -48,7 +49,7 @@ const handleStatusChange = async (newStatus) => {
   if (error) return <p className="max-w-3xl mx-auto px-8 py-12 text-red-600">{error}</p>;
 
   return (
-    <div className="max-w-3xl mx-auto px-8 py-12">
+    <div className="max-w-3xl mx-auto px-4 sm:px-8 py-12">
       <div className="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center mb-6">
         {post.image ? (
           <img src={post.image} alt={post.title} className="w-full h-full object-cover rounded-2xl" />
