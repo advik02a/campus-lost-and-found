@@ -71,7 +71,7 @@ export const getPosts = async (req, res) => {
     const posts = await query
       .skip(skip)
       .limit(Number(limit))
-      .populate("postedBy", "name email");
+      .populate("postedBy", "name email phone");
 
     const total = await Post.countDocuments(filter);
 
@@ -89,7 +89,7 @@ export const getPosts = async (req, res) => {
 // GET /api/posts/:id (public)
 export const getPostById = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id).populate("postedBy", "name email");
+    const post = await Post.findById(req.params.id).populate("postedBy", "name email phone");
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -144,7 +144,10 @@ export const updatePost = async (req, res) => {
     if (date) post.date = date;
     if (req.file) post.image = req.file.path;
 
-    const updatedPost = await post.save();
+    await post.save();
+
+    const updatedPost = await Post.findById(post._id).populate("postedBy", "name email phone");
+
     res.status(200).json(updatedPost);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
@@ -204,7 +207,7 @@ export const updateStatus = async (req, res) => {
     post.status = status;
     await post.save();
 
-    const updatedPost = await Post.findById(post._id).populate("postedBy", "name email");
+    const updatedPost = await Post.findById(post._id).populate("postedBy", "name email phone");
 
     res.status(200).json(updatedPost);
   } catch (err) {
@@ -217,7 +220,7 @@ export const getAllPostsAdmin = async (req, res) => {
   try {
     const posts = await Post.find()
       .sort({ createdAt: -1 })
-      .populate("postedBy", "name email");
+      .populate("postedBy", "name email phone");
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });

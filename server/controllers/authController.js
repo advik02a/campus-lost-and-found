@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-// Helper: create JWT and set it as an httpOnly cookie
 const sendTokenCookie = (res, userId) => {
   const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
     expiresIn: "7d",
@@ -12,7 +11,7 @@ const sendTokenCookie = (res, userId) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };
 
@@ -56,6 +55,7 @@ export const register = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
       role: user.role,
     });
   } catch (err) {
@@ -87,6 +87,7 @@ export const login = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
       role: user.role,
     });
   } catch (err) {
@@ -105,6 +106,27 @@ export const getMe = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// PUT /api/auth/profile (protected)
+export const updateProfile = async (req, res) => {
+  try {
+    const { phone } = req.body;
+
+    if (phone && !/^[\d\s()+-]{7,20}$/.test(phone)) {
+      return res.status(400).json({ message: "Please enter a valid phone number" });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { phone: phone || "" },
+      { new: true }
+    ).select("-password");
+
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });

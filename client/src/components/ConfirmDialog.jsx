@@ -3,13 +3,13 @@ export default function ConfirmDialog({ open, title, message, onConfirm, onCance
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
-      <div className="bg-white rounded-2xl p-6 max-w-sm w-full">
-        <h3 className="font-bold text-lg mb-2">{title}</h3>
-        <p className="text-sm text-gray-500 mb-6">{message}</p>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-sm w-full">
+        <h3 className="font-bold text-lg mb-2 dark:text-gray-100">{title}</h3>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">{message}</p>
         <div className="flex gap-3 justify-end">
           <button
             onClick={onCancel}
-            className="text-sm font-medium border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 transition-colors"
+            className="text-sm font-medium border border-gray-300 dark:border-gray-600 dark:text-gray-200 rounded-lg px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             Cancel
           </button>

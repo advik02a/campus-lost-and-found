@@ -10,6 +10,7 @@ import MyPosts from "./pages/MyPosts";
 import EditPost from "./pages/EditPost";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from "./components/AdminRoute";
+import Profile from "./pages/Profile";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
     <AdminRoute>
     <AdminDashboard />
     </AdminRoute>}/>
+    <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );

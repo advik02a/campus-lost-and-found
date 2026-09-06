@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../api/axios";
 import toast from "react-hot-toast";
+import api from "../api/axios";
 
 const categories = ["Electronics", "Wallet", "Documents", "Clothing", "ID Card", "Other"];
 const locations = ["Library", "Hostel Block A", "Academic Block", "Sports Complex", "Cafeteria"];
@@ -24,7 +24,7 @@ export default function EditPost() {
           type: post.type,
           category: post.category,
           location: post.location,
-          date: post.date.slice(0, 10), // format for <input type="date">
+          date: post.date ? post.date.slice(0, 10) : "",
         });
       })
       .catch(() => setError("Post not found"))
@@ -47,76 +47,86 @@ export default function EditPost() {
     }
   };
 
-  if (loading) return <p className="max-w-2xl mx-auto px-8 py-12 text-gray-400">Loading...</p>;
-  if (!form) return <p className="max-w-2xl mx-auto px-8 py-12 text-red-600">{error}</p>;
+  const inputClass =
+    "border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-lg px-4 py-3 text-sm w-full";
+
+  if (loading)
+    return (
+      <div className="min-h-screen bg-[#fafafa] dark:bg-gray-900">
+        <p className="max-w-2xl mx-auto px-4 sm:px-8 py-12 text-gray-400 dark:text-gray-500">
+          Loading...
+        </p>
+      </div>
+    );
+
+  if (!form)
+    return (
+      <div className="min-h-screen bg-[#fafafa] dark:bg-gray-900">
+        <p className="max-w-2xl mx-auto px-4 sm:px-8 py-12 text-red-600 dark:text-red-400">
+          {error}
+        </p>
+      </div>
+    );
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-8 py-12">
-      <h1 className="text-3xl font-extrabold mb-2">Edit Post</h1>
-      <p className="text-gray-500 mb-8">Update the details of your report.</p>
+    <div className="min-h-screen bg-[#fafafa] dark:bg-gray-900">
+      <div className="max-w-2xl mx-auto px-4 sm:px-8 py-12">
+        <h1 className="text-3xl font-extrabold mb-2 dark:text-gray-100">Edit Post</h1>
+        <p className="text-gray-500 dark:text-gray-400 mb-8">Update the details of your report.</p>
 
-      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+        {error && <p className="text-red-600 dark:text-red-400 text-sm mb-4">{error}</p>}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <input
-          type="text"
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          className="border border-gray-300 rounded-lg px-4 py-3 text-sm"
-          required
-        />
-
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          rows={4}
-          className="border border-gray-300 rounded-lg px-4 py-3 text-sm"
-          required
-        />
-
-        <div className="grid grid-cols-2 gap-4">
-          <select
-            name="category"
-            value={form.category}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <input
+            type="text"
+            name="title"
+            value={form.title}
             onChange={handleChange}
-            className="border border-gray-300 rounded-lg px-4 py-3 text-sm"
-          >
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+            className={inputClass}
+            required
+          />
 
-          <select
-            name="location"
-            value={form.location}
+          <textarea
+            name="description"
+            value={form.description}
             onChange={handleChange}
-            className="border border-gray-300 rounded-lg px-4 py-3 text-sm"
-          >
-            {locations.map((l) => (
-              <option key={l} value={l}>
-                {l}
-              </option>
-            ))}
-          </select>
-        </div>
+            rows={4}
+            className={inputClass}
+            required
+          />
 
-        <input
-          type="date"
-          name="date"
-          value={form.date}
-          onChange={handleChange}
-          className="border border-gray-300 rounded-lg px-4 py-3 text-sm"
-          required
-        />
+          <div className="grid grid-cols-2 gap-4">
+            <select name="category" value={form.category} onChange={handleChange} className={inputClass}>
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
 
-        <button className="bg-blue-800 text-white font-semibold rounded-lg px-4 py-3 hover:bg-blue-900 transition-colors">
-          Save Changes
-        </button>
-      </form>
+            <select name="location" value={form.location} onChange={handleChange} className={inputClass}>
+              {locations.map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <input
+            type="date"
+            name="date"
+            value={form.date}
+            onChange={handleChange}
+            className={inputClass}
+            required
+          />
+
+          <button className="bg-blue-800 text-white font-semibold rounded-lg px-4 py-3 hover:bg-blue-900 transition-colors">
+            Save Changes
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
