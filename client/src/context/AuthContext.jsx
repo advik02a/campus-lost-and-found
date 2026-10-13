@@ -20,9 +20,12 @@ export function AuthProvider({ children }) {
     setUser(res.data);
   };
 
+  // Registration no longer logs the user in immediately - it requires
+  // email verification first. This returns the server's message instead
+  // of setting user state.
   const register = async (name, email, password) => {
     const res = await api.post("/auth/register", { name, email, password });
-    setUser(res.data);
+    return res.data;
   };
 
   const logout = async () => {

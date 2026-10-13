@@ -11,6 +11,9 @@ import EditPost from "./pages/EditPost";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from "./components/AdminRoute";
 import Profile from "./pages/Profile";
+import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 
 function App() {
@@ -31,7 +34,11 @@ function App() {
     <AdminDashboard />
     </AdminRoute>}/>
     <Route path="/profile" element={<Profile />} />
+     <Route path="/verify-email/:token" element={<VerifyEmail />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
+     
     </>
   );
 }
