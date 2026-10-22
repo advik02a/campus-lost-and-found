@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../api/axios";
+import { categories, locations } from "../constants";
 
-const categories = ["Electronics", "Wallet", "Documents", "Clothing", "ID Card", "Other"];
-const locations = ["Library", "Hostel Block A", "Academic Block", "Sports Complex", "Cafeteria"];
 
 export default function EditPost() {
   const { id } = useParams();

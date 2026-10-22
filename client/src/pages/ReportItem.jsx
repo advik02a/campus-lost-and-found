@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { ImagePlus, X } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../api/axios";
+import { categories, locations } from "../constants";
 
-const categories = ["Electronics", "Wallet", "Documents", "Clothing", "ID Card", "Other"];
-const locations = ["Library", "Hostel Block A", "Academic Block", "Sports Complex", "Cafeteria"];
 
 export default function ReportItem() {
   const [form, setForm] = useState({
