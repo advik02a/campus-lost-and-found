@@ -71,7 +71,7 @@ export const getPosts = async (req, res) => {
     const posts = await query
       .skip(skip)
       .limit(Number(limit))
-      .populate("postedBy", "name email phone");
+      .populate("postedBy", "name");
 
     const total = await Post.countDocuments(filter);
 
@@ -89,7 +89,10 @@ export const getPosts = async (req, res) => {
 // GET /api/posts/:id (public)
 export const getPostById = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id).populate("postedBy", "name email phone");
+    // Contact details are only returned to logged-in (verified) users.
+    // Logged-out visitors get the poster's name only.
+    const populateFields = req.user ? "name email phone" : "name";
+    const post = await Post.findById(req.params.id).populate("postedBy", populateFields);
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });

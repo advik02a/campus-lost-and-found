@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin
+Disallow: /my-posts
+Disallow: /profile
+Disallow: /posts/
+Disallow: /verify-email/
+Disallow: /reset-password/
+
+Sitemap: https://YOUR-DOMAIN/sitemap.xml

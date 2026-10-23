@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { MapPin, Calendar, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
@@ -16,7 +16,7 @@ const statusColors = {
 
 export default function PostDetail() {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -104,7 +104,30 @@ export default function PostDetail() {
           </span>
         </div>
 
-        {isOwner ? (
+        {authLoading ? null : !user ? (
+          /* Logged-out visitors: no contact details are sent by the server */
+          <div className="border border-gray-200 dark:border-gray-700 rounded-2xl p-5">
+            <p className="font-semibold dark:text-gray-100 mb-1">Log in to contact the poster</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              Contact details are shared only with verified NIT Hamirpur students.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                to="/login"
+                state={{ from: `/posts/${id}` }}
+                className="flex-1 text-center bg-blue-800 text-white font-semibold rounded-lg px-5 py-3 hover:bg-blue-900 transition-colors"
+              >
+                Log in
+              </Link>
+              <Link
+                to="/register"
+                className="flex-1 text-center border border-gray-300 dark:border-gray-700 dark:text-gray-100 font-semibold rounded-lg px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                Sign up
+              </Link>
+            </div>
+          </div>
+        ) : isOwner ? (
           <div className="border border-gray-200 dark:border-gray-700 rounded-2xl p-5 mb-6">
             <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 block">
               Update status

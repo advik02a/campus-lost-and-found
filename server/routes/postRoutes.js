@@ -8,7 +8,7 @@ import {
   getMyPosts,
   updateStatus,
 } from "../controllers/postController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { protect, optionalAuth } from "../middleware/authMiddleware.js";
 import upload from "../config/cloudinary.js";
 
 const router = express.Router();
@@ -16,7 +16,7 @@ const router = express.Router();
 router.post("/", protect, upload.single("image"), createPost);
 router.get("/", getPosts);
 router.get("/mine", protect, getMyPosts);
-router.get("/:id", getPostById);
+router.get("/:id", optionalAuth, getPostById);
 router.put("/:id", protect, upload.single("image"), updatePost);
 router.patch("/:id/status", protect, updateStatus);
 router.delete("/:id", protect, deletePost);

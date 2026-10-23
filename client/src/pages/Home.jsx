@@ -10,7 +10,7 @@ export default function Home() {
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-full px-3 py-1.5 mb-6">
               <MapPin size={12} />
-              CAMPUS RECOVERY NETWORK
+              NIT HAMIRPUR CAMPUS RECOVERY NETWORK
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6">
@@ -20,7 +20,7 @@ export default function Home() {
             </h1>
 
             <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 max-w-xl mb-8 leading-relaxed">
-              A single, trusted place for students to report lost items, post
+              A single, trusted place for NIT Hamirpur students to report lost items, post
               what they've found, and reconnect belongings with their owners
               — fast.
             </p>
